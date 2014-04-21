@@ -1,3 +1,5 @@
+import AjaxMixin from 'js/mixins/ajax';
+
 var Person = Ember.Object.extend({
     firstName: '',
     lastName: '',
@@ -8,7 +10,7 @@ var Person = Ember.Object.extend({
     }.property('firstName', 'lastName')
 });
 
-Person.reopenClass({
+Person.reopenClass(AjaxMixin, {
     people: [],
     add: function(hash) {
         var person = Person.create(hash);
@@ -18,13 +20,12 @@ Person.reopenClass({
         this.people.removeObject(person);
     },
     find: function() {
-        var self = this;
-        $.getJSON('/api/people', function(response) {
+        this.xhr("/api/people", "GET").then(function(response) {
             response.forEach(function(hash) {
                 var person = Person.create(hash);
-                Ember.run(self.people, self.people.pushObject, person);
+                Ember.run(Person.people, Person.people.pushObject, person);
             });
-        }, this);
+        });
         return this.people;
     }
 });
