@@ -49,6 +49,18 @@ module.exports = function(grunt) {
           src: '**/*.js',
           dest: 'js/dist/transpiled/app/'
         }]
+      },
+      bower: {
+        type: 'amd',
+        moduleName: function(path) {
+          return grunt.config.process('bower/') + path;
+        },
+        files: [{
+          expand: true,
+          cwd: 'js/vendor/',
+          src: '**/*.js',
+          dest: 'js/dist/transpiled/bower/'
+        }]
       }
     },
     concat: {
@@ -60,7 +72,8 @@ module.exports = function(grunt) {
             'js/lib/loader.js',
             'js/lib/ember-resolver.js',
             'js/dist/tmpl.min.js',
-            'js/dist/transpiled/app/**/*.js'],
+            'js/dist/transpiled/app/**/*.js',
+            'js/dist/transpiled/bower/**/*.js'],
           dest: 'js/dist/deps.min.js'
       },
       test: {
@@ -73,6 +86,7 @@ module.exports = function(grunt) {
             'js/lib/ember-resolver.js',
             'js/dist/tmpl.min.js',
             'js/dist/transpiled/app/**/*.js',
+            'js/dist/transpiled/bower/**/*.js',
             'js/dist/transpiled/tests/**/*.js',
             'js/lib/test-loader.js'],
           dest: 'js/dist/deps.min.js'
@@ -101,7 +115,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.task.registerTask('local', ['transpile:app', 'emberhandlebars', 'concat:dist']);
-  grunt.task.registerTask('test', ['transpile:app', 'transpile:tests', 'emberhandlebars', 'concat:test', 'testem:main']);
+  grunt.task.registerTask('local', ['transpile:app', 'transpile:bower', 'emberhandlebars', 'concat:dist']);
+  grunt.task.registerTask('test', ['transpile:app', 'transpile:bower', 'transpile:tests', 'emberhandlebars', 'concat:test', 'testem:main']);
   grunt.task.registerTask("server", ['connect:server', 'local', 'watch']);
 }

@@ -1,4 +1,4 @@
-import AjaxMixin from 'js/mixins/ajax';
+import AjaxMixin from 'bower/toranb-ajax-mixin/main';
 
 var Person = Ember.Object.extend({
     firstName: '',
