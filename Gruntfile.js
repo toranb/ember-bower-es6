@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-testem');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-es6-module-transpiler');
   grunt.loadNpmTasks('grunt-ember-template-compiler');
@@ -16,6 +17,35 @@ module.exports = function(grunt) {
         files: ['js/templates/**/*.handlebars', 'js/app/**/*.js'],
         tasks: ["local"]
       },
+    },
+    karma: {
+        unit: {
+            options: {
+                basePath: '.',
+                frameworks: ['qunit'],
+                singleRun: true,
+                autoWatch: false,
+                browsers: ['PhantomJS'],
+                reporters: ['progress', 'coverage'],
+                files: [
+                    "node_modules/qunit-special-blend/qunit-special-blend.js",
+                    "js/dist/deps.min.js",
+                    "node_modules/qunit-special-blend/run-qunit-special-blend.js"
+                ],
+                preprocessors:{
+                    "js/dist/deps.min.js": "coverage"
+                },
+                coverageReporter: {
+                    type: "text",
+                    dir: "coverage/"
+                },
+                plugins: [
+                    "karma-coverage",
+                    "karma-qunit",
+                    "karma-phantomjs-launcher"
+                ]
+            }
+        }
     },
     testem: {
       options: {
